@@ -1,4 +1,6 @@
+mod lib;
 use clap::Parser;
+use lib::run;
 
 /// CLI options for ifcx-gen
 /// these below provide metadata and attributes to the CLI application 
@@ -38,16 +40,20 @@ So both of these work: */
     // ifcx-gen --input input.ifc --output output.ifcx
 }
 
-fn main() {
-    // Parse CLI arguments into `Cli` struct
-    // This parses the actual CLI arguments into a Cli instance.
-    let args = Cli::parse();
 
-    println!("Input file: {}", args.input);
-    println!("Output file: {}", args.output);
-}
 
 /*Test it with:
 cargo run -- --input ./models/input.ifc --output ./out/model.ifcx
 the -- before the input and output is necessary to separate cargo's arguments from the program's arguments.
 */
+
+fn main() {
+    // Parse CLI arguments into `Cli` struct
+    let args = Cli::parse();
+
+    // Call the run function from the app module with parsed arguments
+    if let Err(e) = run(&args.input, &args.output) {
+        eprintln!("Error: {}", e);
+        std::process::exit(1);
+    }   
+}
