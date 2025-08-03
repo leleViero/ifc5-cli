@@ -1,0 +1,3 @@
+[submodule "IFC5-development"]
+	path = IFC5-development
+	url = https://github.com/buildingSMART/IFC5-development
