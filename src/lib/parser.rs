@@ -1,4 +1,4 @@
-use crate::models::IfcEntity;
+use crate::lib::models::IfcEntity;
 
 /// Parses raw IFC content line by line and extracts entities like `#123= IFCTYPE(...)`.
 pub fn parse_ifc_entities(input: &str) -> Vec<IfcEntity> {
