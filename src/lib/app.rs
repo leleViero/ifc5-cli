@@ -2,7 +2,11 @@ use std::fs;
 use std::path::Path;
 
 use crate::lib::parser::parse_ifc_entities;
+use crate::lib::writer::write_ifcx_file;
 use crate::lib::models::ifc_entity::IfcEntity;
+
+use crate::lib::transformer::transform_to_ifcx;
+use crate::lib::models::IfcxEntity;
 
 /// Main orchestration logic
 pub fn run_test(input_path: &str, output_path: &str) -> Result<(), String> {
@@ -45,9 +49,21 @@ pub fn run(input_path: &str, output_path: &str) -> Result<(), String> {
         println!("    [{}] {} → {}", i + 1, ent.id, ent.entity_type);
     }
 
+    let parsed_entities = parse_ifc_entities(&content);
+    let ifcx_entities: Vec<IfcxEntity> = transform_to_ifcx(&parsed_entities);
+
+    println!("[5] Transformed {} entities to ifcx format.", ifcx_entities.len());
+
+    for ent in ifcx_entities.iter().take(3) {
+        println!("    - path: {}, type: {}", ent.path, ent.entity_type);
+    }
+
     // TODO: Pass to transformer
 
     println!("[✔] Parsing complete, ready for transformation.");
+
+    write_ifcx_file(output_path, &ifcx_entities)?;
+    println!("[✔] Wrote .ifcx JSON file to {}", output_path);
     Ok(())
 }
 
